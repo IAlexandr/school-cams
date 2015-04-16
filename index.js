@@ -16,7 +16,7 @@ var xlsToMongoDb = function (xlsFilePath) {
             console.log('Получено камер: ' + schoolCamList.length);
             console.log('Выполняется геокодирование..');
             var schoolCamsWithCoords = [];
-            async.eachLimit(schoolCamList, 1, function (cam, done) {
+            async.eachLimit(schoolCamList, 10, function (cam, done) {
                 var addressString = cam['Адрес - натменование для ITV'];
                 if (cam['дополнительный адрес для геокодирования']) {
                     addressString = cam['дополнительный адрес для геокодирования'];
@@ -47,14 +47,16 @@ var xlsToMongoDb = function (xlsFilePath) {
             console.log('Выполняется загрузка в базу..');
             // todo записать в коллекцию SchoolCameras
             console.time('db insert');
-            async.eachLimit(schoolCamsWithCoords, 1, function (cam, done) {
+            async.eachLimit(schoolCamsWithCoords, 10, function (cam, done) {
                 var schoolCam = db.SchoolCameras();
                 schoolCam.geometry = cam['geometry'];
                 var properties = schoolCam.properties;
                 properties.address = cam.address;
                 properties.status = "Включена";
                 properties.cameraModel = "hikvision";
-
+                properties.schoolName = cam['Наименование Школы'];
+                properties.archHEX = cam['HEX архив'];
+                properties.routerIp = cam['IP-адрес маршрутизатора'];
                 var itvServerIpPrep = function (itvServerName) {
                     var ip;
                     options.ITV_SERVER_REESTR.forEach(function (itvServer) {
@@ -71,7 +73,8 @@ var xlsToMongoDb = function (xlsFilePath) {
                     direct: {
                         ip: cam['IP-адрес регистратора'],
                         userName: options.DEFAULT_DIRECT_USERNAME,
-                        password: options.DEFAULT_DIRECT_PASSWORD
+                        password: options.DEFAULT_DIRECT_PASSWORD,
+                        numCam: cam['№ камеры в школе']
                     },
                     itv: {
                         ip: itvServerIpPrep(cam['видеосервера']),
