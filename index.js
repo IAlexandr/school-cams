@@ -56,6 +56,7 @@ var xlsToMongoDb = function (xlsFilePath) {
                 properties.cameraModel = "hikvision";
                 properties.schoolName = cam['Наименование Школы'];
                 properties.archHEX = cam['HEX архив'];
+                properties.externalStorage = cam['Номервнешнего хранилища'];
                 properties.routerIp = cam['IP-адрес маршрутизатора'];
                 var itvServerIpPrep = function (itvServerName) {
                     var ip;
