@@ -99,5 +99,5 @@ var xlsToMongoDb = function (xlsFilePath) {
     });
 };
 
-var xlsFilePath = path.resolve(__dirname, 'files/school-cams.xls');
+var xlsFilePath = path.resolve(__dirname, 'files/school-cameras.xls');
 xlsToMongoDb(xlsFilePath);
