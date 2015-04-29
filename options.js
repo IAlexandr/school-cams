@@ -1,11 +1,11 @@
 module.exports = {
-    mongoDbUrl: '',
+    mongoDbUrl: 'mongodb://gisweb:informatica21@ds063140.mongolab.com:63140/gisweb-develop',
     ITV_SERVER_REESTR: [
         {
-            name: '',
-            ip: ''
+            name: 'BDVideoserver08',
+            ip: '10.157.199.18'
         }
     ],
-    DEFAULT_DIRECT_USERNAME: '',
-    DEFAULT_DIRECT_PASSWORD: ''
+    DEFAULT_DIRECT_USERNAME: 'admin',
+    DEFAULT_DIRECT_PASSWORD: 'mwd21'
 };

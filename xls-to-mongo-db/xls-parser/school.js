@@ -1,10 +1,10 @@
-var xls = require('./xlsfile');
+var xls = require('./../../lib/xlsfile');
 
 module.exports.toJson = function (filePath, callback) {
     console.log('Идет считывание xls-файла, пожалуйста подождите..');
     xls.read(filePath, function (err, rawData) {
         if (err) {
-            return callback({ "message": "Ошибка в части содержимого книги." }, null);
+            return callback({ "message": "Ошибка в части содержимого книги либо неверный путь к файлу." }, null);
         }
         validCheck(rawData, function (isChecked) {
             if (isChecked) {
