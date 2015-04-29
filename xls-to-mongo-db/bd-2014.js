@@ -58,13 +58,16 @@ module.exports = function (xlsFilePath) {
 
                 properties.connectionOptions = {
                     cameraType: "etrovision",
+                    itv: {
+                        ip: "",
+                        camId: ""
+                    },
                     direct: {
                         ip: cam['IP-адрес'],
                         userName: cam['Имя'],
                         password: cam['Пароль']
                     }
                 };
-
 
                 bdCam.save(function (err) {
                     return done(err);
