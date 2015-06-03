@@ -21,7 +21,7 @@ function getItvServerIpByName (name) {
 function prepGeometry (stringCoord) {
     var geometry = {
         type: "Point",
-            coordinates: []
+        coordinates: []
     };
     var latLng = stringCoord.split(',');
     geometry.coordinates[0] = latLng[1];
@@ -39,10 +39,11 @@ module.exports = function (xlsFilePath) {
             console.log('Выполняется загрузка в базу..');
             // todo записать в коллекцию SchoolCameras
             console.time('db insert');
-            async.eachLimit(stadiumBgCamList, 10, function (cam, done) {
+            async.eachLimit(stadiumBgCamList, 1, function (cam, done) {
                 var stadiumCam = db.StadiumBgCameras();
                 stadiumCam.geometry = prepGeometry(cam['coord']);
                 var properties = stadiumCam.properties;
+                properties.ptz = cam['№ подъезда / № обзорной камеры'] == 'поворотная';
                 properties.address = cam['Имя в ITV'];
                 properties.status = "Включена";
                 properties.cameraModel = cam['type'];
@@ -50,10 +51,12 @@ module.exports = function (xlsFilePath) {
                 properties.connectionOptions = {
                     cameraType: cam['type'],
                     itv: {
+                        blocked: false,
                         ip: getItvServerIpByName(cam["№ видеосервера"]),
                         camId: cam["№ ITV"]
                     },
                     direct: {
+                        blocked: true,
                         ip: cam['IP-адрес'],
                         userName: cam['Имя'],
                         password: cam['Пароль']
