@@ -1,5 +1,5 @@
 module.exports = {
-    mongoDbUrl: 'mongodb://geoworks:Informatica21@ds063140.mongolab.com:63140/gisweb-develop',
+    mongoDbUrl: 'mongodb://ds063140.mongolab.com:63140/gisweb-develop',
     ITV_SERVER_REESTR: {
         BDVideoserver08: '10.157.199.18',
         BGVideoserver1: '10.157.199.14',
