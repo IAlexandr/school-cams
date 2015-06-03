@@ -4,6 +4,13 @@ var geocoder = require('./../lib/yandex-geocoder-api');
 var db = require('./../lib/db');
 var options = require('./../options');
 
+function getItvServerIpByNum (num) {
+    var ip = "";
+    if (options.itv[num]) {
+        ip = options.itv[num];
+    }
+    return ip;
+}
 module.exports = function (xlsFilePath) {
     console.time('xlsToMongoDB bd-2014');
     async.waterfall([
@@ -59,8 +66,8 @@ module.exports = function (xlsFilePath) {
                 properties.connectionOptions = {
                     cameraType: "etrovision",
                     itv: {
-                        ip: "",
-                        camId: ""
+                        ip:getItvServerIpByNum(cam["№ видеосервера"]),
+                        camId: cam["№ ITV"]
                     },
                     direct: {
                         ip: cam['IP-адрес'],
