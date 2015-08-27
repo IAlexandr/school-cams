@@ -25,11 +25,15 @@ var validCheck = function (sheet, callback) {
         var checkCells = [
             { c: 0, r: 0, value: 'пп' },
             { c: 1, r: 0, value: 'Наименование Школы' },
-            { c: 2, r: 0, value: 'Адрес - натменование для ITV' },
-            { c: 3, r: 0, value: 'HEX архив' },
-            { c: 4, r: 0, value: '№ камеры в школе' },
-            { c: 5, r: 0, value: 'IP-адрес регистратора' },
-            { c: 10, r: 0, value: 'дополнительный адрес для геокодирования' }
+            { c: 2, r: 0, value: 'Адрес' },
+            { c: 3, r: 0, value: 'Адрес - натменование для ITV' },
+            { c: 4, r: 0, value: 'HEX архив' },
+            { c: 5, r: 0, value: '№ камеры в школе' },
+            { c: 6, r: 0, value: 'IP-адрес регистратора' },
+            { c: 7, r: 0, value: 'IP-адрес маршрутизатора' },
+            { c: 8, r: 0, value: 'видеосервера' },
+            { c: 9, r: 0, value: 'номер камеры в ITV' },
+            { c: 10, r: 0, value: 'Номервнешнего хранилища' }
         ];
         checkCells.forEach(function (cell) {
             var value = sheet[xls.encode_cell(cell)];
@@ -90,21 +94,21 @@ var getData = function (sheet) {
             if (fillColumnCount > 4) {
                 curConOp = {
                     'Наименование Школы': rowObject['Наименование Школы'],
+                    'Адрес': rowObject['Адрес'],
                     'IP-адрес регистратора': rowObject['IP-адрес регистратора'],
                     'IP-адрес маршрутизатора': rowObject['IP-адрес маршрутизатора'],
                     'видеосервера': rowObject['видеосервера'],
-                    'Номервнешнего хранилища': rowObject['Номервнешнего хранилища'],
-                    'дополнительный адрес для геокодирования': rowObject['дополнительный адрес для геокодирования']
+                    'Номервнешнего хранилища': rowObject['Номервнешнего хранилища']
                 }
             }
             if (!emptyRow) {
                 rowObject['Наименование Школы'] = curConOp['Наименование Школы'];
                 rowObject['HEX архив'] = archHEX;
+                rowObject['Адрес'] = curConOp['Адрес'];
                 rowObject['IP-адрес регистратора'] = curConOp['IP-адрес регистратора'];
                 rowObject['IP-адрес маршрутизатора'] = curConOp['IP-адрес маршрутизатора'];
                 rowObject['видеосервера'] = curConOp['видеосервера'];
                 rowObject['Номервнешнего хранилища'] = curConOp['Номервнешнего хранилища'];
-                rowObject['дополнительный адрес для геокодирования'] = curConOp['дополнительный адрес для геокодирования'];
                 outSheet.push(rowObject);
             }
         }
