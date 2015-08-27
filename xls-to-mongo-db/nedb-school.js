@@ -5,6 +5,10 @@ var xlsParser = require('./xls-parser/school');
 var geocoder = require('./../lib/yandex-geocoder-api');
 var db = require('./../lib/db');
 var options = require('./../options');
+//var geocodAddrResults = {};
+//if (fs.existsSync(path.resolve(__dirname, '../temp.json'))) {
+//    geocodAddrResults = require('../temp');
+//}
 var geocodAddrResults = require('../temp');
 
 module.exports = function (xlsFilePath) {
@@ -42,14 +46,21 @@ module.exports = function (xlsFilePath) {
                     } else {
                         geocoder.search(addressString, function (err, result) {
                             if (err) {
+                                console.log('Поиск по адресу: ' + addressString);
                                 return done(err);
                             }
                             if (result.length > 0) {
+                                var geometry = {
+                                    type: "Point",
+                                    coordinates: []
+                                };
+                                geometry.coordinates.push(parseFloat(result[0].geometry.coordinates[0]));
+                                geometry.coordinates.push(parseFloat(result[0].geometry.coordinates[1]));
                                 geocodAddrResults[addressString] = {
-                                    geometry: result[0].geometry,
+                                    geometry: geometry,
                                     address: result[0].address
                                 };
-                                cam['geometry'] = result[0].geometry;
+                                cam['geometry'] = geometry;
                                 cam['address'] = result[0].address;
                                 schoolCamsWithCoords.push(cam);
                             } else {
@@ -62,7 +73,7 @@ module.exports = function (xlsFilePath) {
             }, function (err) {
                 console.timeEnd('geocoder');
                 if (err) {
-                    return callback(err);
+                    console.log(err.message);
                 }
                 console.log('temp file path: ' + path.resolve(__dirname, '../temp.json'));
                 fs.writeFile(path.resolve(__dirname, '../temp.json'), JSON.stringify(geocodAddrResults, null, 2), function (err) {
@@ -78,8 +89,11 @@ module.exports = function (xlsFilePath) {
             console.log('Выполняется загрузка в базу..');
             // todo записать в коллекцию SchoolCameras
             console.time('db insert');
-            async.eachLimit(schoolCamsWithCoords, 1, function (cam, done) {
-                var schoolCam = {};
+            async.eachLimit(schoolCamsWithCoords, 10, function (cam, done) {
+                var schoolCam = {
+                    "type":"Feature"
+                };
+
                 schoolCam.geometry = cam['geometry'];
                 var properties = {};
                 properties.address = cam.address;
@@ -138,9 +152,11 @@ module.exports = function (xlsFilePath) {
         }
     ], function (err) {
         if (err) {
+            console.log('Произошла ошибка: ');
             console.log(err.message);
+        } else {
+            console.log("Загрузка завершена.");
+            console.timeEnd('xlsToMongoDB school');
         }
-        console.log("Загрузка завершена.");
-        console.timeEnd('xlsToMongoDB school');
     });
 };
